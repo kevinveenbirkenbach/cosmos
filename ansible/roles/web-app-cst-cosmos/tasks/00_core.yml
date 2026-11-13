@@ -19,6 +19,7 @@
   loop_control:
     loop_var: cosmos_page_file
 
-- name: "🧩 load the front proxy for '{{ application_id }}'"
-  include_role:
-    name: sys-stk-front-proxy
+- name: "🧱 Load the stack of '{{ application_id }}'"
+  ansible.builtin.include_role:
+    name: svc-stack
+    tasks_from: consumer.yml
