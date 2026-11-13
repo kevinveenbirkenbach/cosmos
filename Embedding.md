@@ -18,10 +18,10 @@ Infinito.Nexus apps load the library same-origin from the CDN path every vhost s
   - `cookieDomain`: the parent domain all apps share, so switching cosmos off once holds everywhere; without it the setting holds for this host only.
   - `hotkey`: replaces `alt+shift+c`, for example `ctrl+alt+k`.
 
-Other pages place the elements themselves:
+Other pages load the public build, which every origin may fetch, and place the elements themselves:
 
 ```html
-<script type="module" src="https://cosmos.example.org/js/cosmos.js"></script>
+<script type="module" src="https://cosmos.infinito.nexus/js/cosmos.js"></script>
 <cosmos-sky></cosmos-sky>
 ```
 

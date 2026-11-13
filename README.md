@@ -17,11 +17,11 @@ The live sky over your visitors as a calm page background: sun, moon, stars and 
 ## Quick start
 
 ```html
-<script type="module" src="https://cosmos.example.org/js/cosmos.js"></script>
+<script type="module" src="https://cosmos.infinito.nexus/js/cosmos.js"></script>
 <cosmos-sky></cosmos-sky>
 ```
 
-`Alt+Shift+C` opens the settings. Attributes, properties and menu hooks: [Embedding.md](./Embedding.md).
+The library is served with `Access-Control-Allow-Origin: *`, so any site can load it; [cosmos.infinito.nexus](https://cosmos.infinito.nexus/) shows the sky on its own. `Alt+Shift+C` opens the settings. Attributes, properties and menu hooks: [Embedding.md](./Embedding.md).
 
 ## Infinito.Nexus
 

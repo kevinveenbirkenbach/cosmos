@@ -59,6 +59,15 @@ test("the library is served same-origin under the CDN path as JavaScript", async
   expect(response.headers()["content-type"] || "", "Expected a JavaScript MIME type").toMatch(/javascript/);
 });
 
+test("other sites load the public library from /js/cosmos.js as a module", async ({ page, request }) => {
+  const url = `${appBaseUrl}/js/cosmos.js`;
+  const response = await request.get(url, { headers: { Origin: "https://example.org" }, timeout: resolveTimeout(30_000) });
+  expect(response.status(), "Expected the public library to answer 200").toBe(200);
+  expect(response.headers()["access-control-allow-origin"], "Expected the library to allow every origin").toBe("*");
+  await page.setContent(`<script type="module" src="${url}"></script>`);
+  await expect.poll(() => page.evaluate(() => Boolean(customElements.get("cosmos-sky"))), { timeout: resolveTimeout(30_000) }).toBe(true);
+});
+
 test("the sky sets only cosmos properties and attributes on the root, without errors or CSP violations", async ({ page }) => {
   const problems = watchProblems(page);
   await page.addInitScript(() => {
