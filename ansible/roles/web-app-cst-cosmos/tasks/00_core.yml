@@ -1,0 +1,24 @@
+---
+- include_tasks: utils/once/flag.yml
+
+- name: "🌌 Publish the cosmos library of '{{ application_id }}' on the CDN"
+  stack_host_copy:
+    src: "javascript/"
+    dest: "{{ lookup('cdn', application_id).role.release.js }}/"
+    mode: "0644"
+    directory_mode: "0755"
+
+- name: "🖼️ Publish the standalone cosmos page of '{{ application_id }}' on the CDN"
+  stack_host_copy:
+    src: "{{ cosmos_page_file }}"
+    dest: "{{ [lookup('cdn', application_id).role.release.root, cosmos_page_file] | path_join }}"
+    mode: "0644"
+  loop:
+    - index.html
+    - index.css
+  loop_control:
+    loop_var: cosmos_page_file
+
+- name: "🧩 load the front proxy for '{{ application_id }}'"
+  include_role:
+    name: sys-stk-front-proxy

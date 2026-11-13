@@ -1,0 +1,32 @@
+---
+galaxy_info:
+  author: Kevin Veen-Birkenbach
+  description: "Live sky over the viewer as shared design background: standalone page plus embeddable Web Component library"
+  license: MIT
+  company: |
+    Kevin Veen-Birkenbach
+    https://www.veen.world
+  galaxy_tags:
+    - design
+    - background
+    - sky
+    - webcomponents
+    - static
+  issue_tracker_url: https://github.com/kevinveenbirkenbach/cosmos/issues
+  min_ansible_version: "2.9"
+  platforms:
+    - name: ArchLinux
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+    - name: EL
+      versions:
+        - all
+    - name: Fedora
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all

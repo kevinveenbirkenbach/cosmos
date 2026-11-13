@@ -1,0 +1,4 @@
+---
+canonical:
+  - cosmos.{{ DOMAIN_PRIMARY }}
+aliases: []

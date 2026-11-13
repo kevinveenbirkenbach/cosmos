@@ -1,0 +1,42 @@
+html,
+body {
+  margin: 0;
+  min-block-size: 100%;
+  background: transparent;
+  color: var(--cosmos-text, CanvasText);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+main {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 0.9rem;
+  padding: max(1.25rem, env(safe-area-inset-top)) 1.5rem;
+}
+
+main h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+main p {
+  grid-column: 1 / -1;
+  margin: 0.6rem 0 0;
+  max-inline-size: 36rem;
+}
+
+main a {
+  color: inherit;
+  text-underline-offset: 0.2em;
+}
+
+kbd {
+  padding: 0 0.3em;
+  border: 1px solid color-mix(in srgb, currentColor 40%, transparent);
+  border-radius: 0.3em;
+  font: inherit;
+  font-size: 0.9em;
+}
