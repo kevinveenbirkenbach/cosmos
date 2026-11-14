@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.1] - 2026-11-14
+
+Fixed:
+
+- Role: library source is *cosmos.mjs* for the core lint; CDN path unchanged
+
+Contributors:
+
+- [Kevin Veen-Birkenbach](https://veen.world): production lint compatibility
+
 ## [0.2.0] - 2026-11-14
 
 Breaking:
