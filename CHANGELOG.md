@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.2.0] - 2026-11-14
+
+Breaking:
+
+- Role: *web-app-cst-cosmos* loads its stack through *svc-stack* of core
+
+Added:
+
+- Logout: the role declares its own back-channel logout row; SSO stays off
+
+Upgrade notes:
+
+- Core: pin *v0.2.0* only on the IAM line; core main keeps *v0.1.0*
+
+Contributors:
+
+- [Kevin Veen-Birkenbach](https://veen.world): stack migration, logout row
+
 ## [0.1.0] - 2026-11-13
 
 Added:
