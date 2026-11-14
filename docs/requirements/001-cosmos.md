@@ -17,13 +17,15 @@ Carried over from skills requirement 002 (operator-confirmed 2026-11-06):
    generated music, the radio streams and the 3D agent graph stay in the
    orchestrator (operator 2026-11-11). Rejected: music and the 3D scene in
    cosmos (002 decision 1).
-2. **Repository**: `github.com/kevinveenbirkenbach/cosmos`, not managed by
-   pkgmgr, holding the Infinito.Nexus custom role at
-   `ansible/roles/web-app-cst-cosmos/`, which core pulls from its
-   inventory-declared source (core requirement 046), like the store and
-   security roles. Rejected: the infinito-nexus organisation, a
-   pkgmgr-managed release, and the repository root as the role, because core's
-   pull requires `source.path` to end in a directory named after the group.
+2. **Repository**: `github.com/kevinveenbirkenbach/cosmos`, holding the
+   Infinito.Nexus custom role at `ansible/roles/web-app-cst-cosmos/`, which
+   core pulls from its inventory-declared source (core requirement 046), like
+   the store and security roles. `pkgmgr release` cuts the `vX.Y.Z` tags core
+   pins (core requirement 124), but no pkgmgr dependency declaration fixes
+   cosmos as a global dependency (operator 2026-11-14). Rejected: the
+   infinito-nexus organisation, a global pkgmgr dependency, and the repository
+   root as the role, because core's pull requires `source.path` to end in a
+   directory named after the group.
 3. **Form**: Web Components that set `--cosmos-*` CSS custom properties every
    design can follow; a `colors` mode draws nothing. Rejected: a plain ES
    module API without elements.
@@ -166,7 +168,8 @@ flowchart TD
 
 - [ ] `LICENSE` holds the MIT licence, and `NOTICE.md` names the licence of
       every vendored or data file.
-- [ ] `pkgmgr list` does not list cosmos.
+- [ ] No pkgmgr dependency declaration names cosmos: core and every other
+      repository receive it only through the inventory-declared source.
 - [ ] `ansible/roles/web-app-cst-cosmos/` is the role: `README.md`,
       `meta/main.yml`, `meta/info.yml`, `meta/services.yml`,
       `meta/domains.yml`, `meta/license.yml`, `vars/main.yml` with
