@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.1] - 2026-11-14
+
+Fixed:
+
+- Role: library source renamed to *cosmos.mjs* for the core JavaScript lint
+- Role: the CDN still serves it as *js/cosmos.js*; embeds stay unchanged
+- Role: declared free of garbage collection; it runs no container
+
+Contributors:
+
+- [Kevin Veen-Birkenbach](https://veen.world): production lint fixes
+
 ## [0.1.0] - 2026-11-13
 
 Added:
