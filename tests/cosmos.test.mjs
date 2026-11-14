@@ -1,12 +1,12 @@
 import {test} from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import * as cosmos from "../ansible/roles/web-app-cst-cosmos/files/javascript/cosmos.js";
+import * as cosmos from "../ansible/roles/web-app-cst-cosmos/files/javascript/cosmos.mjs";
 
 const DAY = 86400000;
 const SIDEREAL_RATE = 360.98564736629;
 const BERLIN = [52.5, 13.4];
-const source = readFileSync(new URL("../ansible/roles/web-app-cst-cosmos/files/javascript/cosmos.js", import.meta.url), "utf8");
+const source = readFileSync(new URL("../ansible/roles/web-app-cst-cosmos/files/javascript/cosmos.mjs", import.meta.url), "utf8");
 const at = (text) => Date.parse(text);
 const near = (actual, expected, delta, label) => assert.ok(Math.abs(actual - expected) <= delta, `${label}: ${actual} is not within ${delta} of ${expected}`);
 const angle = (actual, expected, delta, label) => near((((actual - expected + 540) % 360) + 360) % 360 - 180, 0, delta, label);

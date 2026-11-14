@@ -39,7 +39,7 @@ applications:
 
 ## Development
 
-- [cosmos.js](./ansible/roles/web-app-cst-cosmos/files/javascript/cosmos.js) is the library; `node --test tests/` runs its [unit tests](./tests/).
+- [cosmos.mjs](./ansible/roles/web-app-cst-cosmos/files/javascript/cosmos.mjs) is the library, served as *cosmos.js*; `node --test tests/` runs its [unit tests](./tests/).
 - `python3 -I tools/data.py` rebuilds the embedded stars, land mask and time zones from the pinned sources in [NOTICE.md](./NOTICE.md).
 - [docs/requirements/](./docs/requirements/) holds the requirements.
 
