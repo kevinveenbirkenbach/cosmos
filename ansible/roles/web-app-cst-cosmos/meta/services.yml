@@ -35,6 +35,11 @@ logout:
 sso:
   enabled: false
   shared: false
+  backchannel:
+    logout: "no, SSO is off for this role (`sso.enabled: false`)"
+    endpoint: "-"
+    documentation: "-"
+    session: "no SSO session"
 # nocheck: email
 # nocheck: dynamic-flag
 email:
