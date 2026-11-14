@@ -133,7 +133,7 @@ def zones(zoneinfo):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Rewrite the DATA line of cosmos.js: stars, land and zones.")
+    parser = argparse.ArgumentParser(description="Rewrite the DATA line of cosmos.mjs: stars, land and zones.")
     parser.add_argument(
         "--zoneinfo",
         type=pathlib.Path,
@@ -149,8 +149,8 @@ def main():
         / "web-app-cst-cosmos"
         / "files"
         / "javascript"
-        / "cosmos.js",
-        help="cosmos.js whose DATA line is rewritten",
+        / "cosmos.mjs",
+        help="cosmos.mjs whose DATA line is rewritten",
     )
     args = parser.parse_args()
     mask = land(json.loads(fetch(LAND_URL, LAND_SHA256)))

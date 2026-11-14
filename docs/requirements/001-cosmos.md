@@ -176,7 +176,7 @@ flowchart TD
 
 ### Library
 
-- [ ] `ansible/roles/web-app-cst-cosmos/files/javascript/cosmos.js` is one ES
+- [ ] `ansible/roles/web-app-cst-cosmos/files/javascript/cosmos.mjs` is one ES
       module with no `import`; a page that loads it through
       `<script type="module">` has `<cosmos-sky>` and `<cosmos-globe>`
       defined.

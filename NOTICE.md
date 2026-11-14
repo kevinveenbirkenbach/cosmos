@@ -3,7 +3,7 @@
 cosmos is released under the MIT licence (see `LICENSE`). It embeds data from
 the third-party sources below; its icons are its own. `tools/data.py`
 regenerates the `DATA` line of
-`ansible/roles/web-app-cst-cosmos/files/javascript/cosmos.js` from them; it
+`ansible/roles/web-app-cst-cosmos/files/javascript/cosmos.mjs` from them; it
 pins each download to a commit and a SHA-256.
 
 ## Bright stars: Yale Bright Star Catalogue
