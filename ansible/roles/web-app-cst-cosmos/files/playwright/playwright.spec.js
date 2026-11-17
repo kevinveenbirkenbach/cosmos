@@ -189,6 +189,7 @@ test("the place comes from the timezone without any geolocation call", async ({ 
 });
 
 test("a granted location is used silently and stays in the browser", async ({ browser }) => {
+  test.skip(!appBaseUrl.startsWith("https://"), "browsers grant geolocation only to secure contexts; onion vhosts serve plain HTTP");
   const context = await browser.newContext({ ignoreHTTPSErrors: true, permissions: ["geolocation"], geolocation: { latitude: 48.137, longitude: 11.576 } });
   const page = await context.newPage();
   await gotoOnion(page, `${appBaseUrl}/`);
