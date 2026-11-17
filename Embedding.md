@@ -29,7 +29,7 @@ Other pages load the public build, which every origin may fetch, and place the e
 
 | Element | Attributes |
 | --- | --- |
-| `<cosmos-sky>` | `latitude`, `longitude` (pin the place), `time` (an ISO instant that freezes the sky), `mode` (`full`, `colors`, `off`; the user's choice wins), `hotkey`, `cookie-domain` |
+| `<cosmos-sky>` | `latitude`, `longitude` (pin the place), `time` (an ISO instant that freezes the sky), `mode` (`full`, `colors`, `off`; the user's choice wins), `hotkey`, `cookie-domain`, `azimuth`, `altitude`, `fov` (steer the view in degrees; while `azimuth` is set they win over the default view and the phone), `sky-top`, `sky-bottom` (`#rrggbb`, both set: custom sky colors, stars and stage still follow the sun) |
 | `<cosmos-globe>` | `size` in px, at most 48; a menu icon that opens the settings |
 
 Inside a frame, such as an app opened in the dashboard, the sky runs `colors` only and draws nothing.

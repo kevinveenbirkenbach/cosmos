@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.2] - 2026-11-17
+
+Fixed:
+
+- Tests: the granted-location test skips targets served over plain HTTP
+
+Contributors:
+
+- [Kevin Veen-Birkenbach](https://veen.world): onion test compatibility
+
 ## [0.2.1] - 2026-11-14
 
 Fixed:

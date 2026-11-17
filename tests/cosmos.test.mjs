@@ -66,6 +66,17 @@ test("the text keeps 4.5:1 against the upper sky at every minute of a day and ag
   assert.equal(cosmos.tones(at("2026-06-21T23:00:00Z"), ...BERLIN).scheme, "dark");
 });
 
+test("custom sky colors replace the palette with a legible text while the stage follows the sun", () => {
+  const noon = at("2026-06-21T11:00:00Z");
+  const custom = cosmos.tones(noon, ...BERLIN, {top: "#0b1020", bottom: "#2b3a67"});
+  assert.deepEqual([custom.top, custom.bottom], [[11, 16, 32], [43, 58, 103]]);
+  assert.equal(custom.scheme, "dark");
+  assert.ok(cosmos.contrast(custom.text, custom.top) >= 4.5);
+  assert.equal(custom.stage, "day");
+  assert.deepEqual(cosmos.tones(noon, ...BERLIN, {top: "navy", bottom: "#2b3a67"}).top, cosmos.tones(noon, ...BERLIN).top);
+  assert.deepEqual(cosmos.tones(noon, ...BERLIN, {top: null, bottom: null}).bottom, cosmos.tones(noon, ...BERLIN).bottom);
+});
+
 test("catalogue stars sit at their published places and culminate where geometry puts them over Berlin", () => {
   assert.ok(cosmos.DATA.stars.filter(([, , mag]) => mag <= 4.5).length >= 500, "at least 500 stars to magnitude 4.5");
   const vega = brightest(279.2347, 38.7837);
@@ -183,6 +194,16 @@ test("the view lens puts the view direction at its anchor", () => {
   near(center.y, 400, 1e-6, "y");
   const desk = cosmos.lens({azimuth: 180, altitude: 0, fov: 180, anchor: 0.86}, 1000, 1000);
   near(cosmos.place(desk, 0, 180).y, 860, 1e-6, "horizon line");
+});
+
+test("a page steers the view by attributes, else it faces the equator or follows the phone", () => {
+  const unsteered = {azimuth: null, altitude: null, fov: null};
+  assert.deepEqual(cosmos.skyView(unsteered, 52.5, null), {altitude: 0, fov: 180, anchor: 0.86, azimuth: 180});
+  assert.deepEqual(cosmos.skyView(unsteered, -33.9, null), {altitude: 0, fov: 180, anchor: 0.86, azimuth: 0});
+  assert.equal(cosmos.skyView(unsteered, 52.5, {azimuth: 90, altitude: 20}).square, true);
+  assert.deepEqual(cosmos.skyView({azimuth: "-90", altitude: "40", fov: "240"}, 52.5, {azimuth: 10, altitude: 5}), {altitude: 40, fov: 240, anchor: 0.86, azimuth: 270});
+  assert.deepEqual(cosmos.skyView({azimuth: "45", altitude: "120", fov: "0"}, 52.5, null), {altitude: 90, fov: 1, anchor: 0.86, azimuth: 45});
+  assert.deepEqual(cosmos.skyView({azimuth: "45", altitude: "", fov: "x"}, 52.5, null), {altitude: 0, fov: 180, anchor: 0.86, azimuth: 45});
 });
 
 test("the library is one strict-CSP module without imports, audio, agent graph or foreign theme writes", () => {

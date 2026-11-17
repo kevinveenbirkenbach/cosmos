@@ -15,6 +15,8 @@ const MARKS = ["data-cosmos-stage", "data-cosmos-scheme", "data-cosmos-legible"]
 const REACH = 0.94;
 const DESK = {altitude: 0, fov: 180, anchor: 0.86};
 const PHONE = {fov: 60, anchor: 0.5, square: true};
+const VIEW_ATTRIBUTES = ["azimuth", "altitude", "fov"];
+const COLOR = /^#[0-9a-f]{6}$/i;
 const LAND = {width: 180, height: 90};
 const GLOBE = {max: 48, size: 32, tilt: 20, lead: 50};
 const WHITE = [255, 255, 255];
@@ -195,9 +197,10 @@ export function textFor(top, bottom) {
   return {text, scheme: light ? "light" : "dark", legible: both(text) >= 4.5 ? "all" : "top"};
 }
 
-export function tones(ms, latitude, longitude) {
+export function tones(ms, latitude, longitude, colors) {
   const light = sun(ms, latitude, longitude);
-  const {top, bottom} = skyAt(light.alt);
+  const custom = Boolean(colors) && COLOR.test(colors.top || "") && COLOR.test(colors.bottom || "");
+  const {top, bottom} = custom ? {top: hex(colors.top), bottom: hex(colors.bottom)} : skyAt(light.alt);
   return {top, bottom, ...textFor(top, bottom), stage: stage(light.alt), altitude: light.alt};
 }
 
@@ -296,6 +299,18 @@ export function daylight(point, light) {
 function rotation(yaw, pitch) {
   const [cy, sy, cp, sp] = [cos(yaw), sin(yaw), cos(pitch), sin(pitch)];
   return [cy, 0, sy, sp * sy, cp, -sp * cy, -cp * sy, sp, cp * cy];
+}
+
+export function skyView(steer, latitude, phone) {
+  if (finite(steer.azimuth)) {
+    return {
+      ...DESK,
+      azimuth: wrap(Number(steer.azimuth)),
+      altitude: finite(steer.altitude) ? clamp(Number(steer.altitude), -90, 90) : DESK.altitude,
+      fov: finite(steer.fov) ? clamp(Number(steer.fov), 1, 360) : DESK.fov,
+    };
+  }
+  return phone ? {...PHONE, ...phone} : {...DESK, azimuth: latitude >= 0 ? 180 : 0};
 }
 
 export function lens(view, width, height) {
@@ -442,7 +457,7 @@ canvas { display: block; inline-size: 100%; block-size: 100%; }
 const Base = globalThis.HTMLElement ?? class {};
 
 export class CosmosSky extends Base {
-  static observedAttributes = ["latitude", "longitude", "time", "mode", "hotkey", "cookie-domain"];
+  static observedAttributes = ["latitude", "longitude", "time", "mode", "hotkey", "cookie-domain", "sky-top", "sky-bottom", ...VIEW_ATTRIBUTES];
   fallback = null;
   #root;
   #canvas;
@@ -521,10 +536,15 @@ export class CosmosSky extends Base {
     this.#follow(false);
   }
 
-  attributeChangedCallback() {
-    if (this.isConnected) {
-      this.refresh();
+  attributeChangedCallback(name) {
+    if (!this.isConnected) {
+      return;
     }
+    if (VIEW_ATTRIBUTES.includes(name)) {
+      this.#paintSoon();
+      return;
+    }
+    this.refresh();
   }
 
   open() {
@@ -567,7 +587,7 @@ export class CosmosSky extends Base {
     }
     const ms = this.#now();
     const where = this.#placeNow();
-    const look = tones(ms, where.latitude, where.longitude);
+    const look = tones(ms, where.latitude, where.longitude, this.#colors());
     rootSheet().replaceSync(`:root { --cosmos-sky-top: ${css(look.top)}; --cosmos-sky-bottom: ${css(look.bottom)}; --cosmos-text: ${css(look.text)}; --cosmos-scheme: ${look.scheme}; --cosmos-stage: ${look.stage}; --cosmos-sun-altitude: ${look.altitude.toFixed(2)}; }`);
     root.setAttribute("data-cosmos-stage", look.stage);
     root.setAttribute("data-cosmos-scheme", look.scheme);
@@ -587,6 +607,10 @@ export class CosmosSky extends Base {
     if (!this.hasAttribute("time") && document.visibilityState !== "hidden") {
       this.#timer = window.setTimeout(() => this.refresh(), MINUTE - (Date.now() % MINUTE) + 50);
     }
+  }
+
+  #colors() {
+    return {top: this.getAttribute("sky-top"), bottom: this.getAttribute("sky-bottom")};
   }
 
   #now() {
@@ -701,24 +725,21 @@ export class CosmosSky extends Base {
     }
     const next = pose(event.alpha, event.beta, event.gamma, event.webkitCompassHeading);
     this.#view = this.#view ? {azimuth: wrap(this.#view.azimuth + signed(next.azimuth - this.#view.azimuth) * 0.25), altitude: this.#view.altitude + (next.altitude - this.#view.altitude) * 0.25} : next;
-    if (!this.#frame && this.mode === "full") {
-      this.#frame = window.requestAnimationFrame(() => {
-        this.#frame = 0;
-        this.#repaint();
-      });
-    }
+    this.#paintSoon();
   };
 
   #onVisibility = () => this.refresh();
 
-  #onResize = () => {
+  #onResize = () => this.#paintSoon();
+
+  #paintSoon() {
     if (!this.#frame && this.mode === "full") {
       this.#frame = window.requestAnimationFrame(() => {
         this.#frame = 0;
         this.#repaint();
       });
     }
-  };
+  }
 
   #repaint() {
     if (this.hasAttribute("data-covered")) {
@@ -726,7 +747,7 @@ export class CosmosSky extends Base {
     }
     const where = this.#placeNow();
     const ms = this.#now();
-    this.#draw(ms, where, tones(ms, where.latitude, where.longitude));
+    this.#draw(ms, where, tones(ms, where.latitude, where.longitude, this.#colors()));
   }
 
   async #askPermissionlessGps() {
@@ -768,8 +789,10 @@ export class CosmosSky extends Base {
       canvas.height = height;
     }
     this.#paints += 1;
-    const following = this.#following && this.#view;
-    const view = following ? {...PHONE, ...this.#view} : {...DESK, azimuth: where.latitude >= 0 ? 180 : 0};
+    const steer = Object.fromEntries(VIEW_ATTRIBUTES.map((name) => [name, this.getAttribute(name)]));
+    const phone = this.#following && this.#view;
+    const turned = finite(steer.azimuth) || Boolean(phone);
+    const view = skyView(steer, where.latitude, phone);
     const sight = lens(view, width, height);
     const at = (alt, az) => place(sight, alt, az);
     const inside = (spot, margin) => spot.x >= -margin && spot.x <= width + margin && spot.y >= -margin && spot.y <= height + margin;
@@ -839,7 +862,7 @@ export class CosmosSky extends Base {
     paint.lineTo(edge[0].x, bottom);
     paint.closePath();
     paint.fill();
-    if (following) {
+    if (turned) {
       paint.fillStyle = "rgb(255 255 255 / 0.6)";
       paint.font = "600 12px system-ui, sans-serif";
       paint.textAlign = "center";

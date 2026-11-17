@@ -124,6 +124,19 @@ Decided 2026-11-11:
     opt in by clearing both under `html[data-cosmos-mode="full"]`. Rejected:
     a per-app list in the library; trusting every app to clear `html`
     (Experiment, 2026-11-12 08:38).
+20. **Steerable view**: a page turns the sky through the `azimuth`,
+    `altitude` and `fov` attributes of `<cosmos-sky>`, in degrees. While
+    `azimuth` is set they win over the desk view and the phone orientation,
+    and the compass labels show. Cosmos clamps only what its projection
+    needs (altitude ±90°, field of view 1° to 360°); the page keeps its own
+    limits. The orchestrator's sky look steers it this way (operator,
+    2026-11-17). Rejected: the orchestrator keeping its own canvas renderer;
+    dropping the sky look.
+21. **Custom sky colors**: `sky-top` and `sky-bottom` (`#rrggbb`, both set)
+    replace the sky palette; the text, scheme and drawn gradient follow
+    them while stars, sun, moon and stage still follow the real sun. The
+    orchestrator's custom theme sets them (operator, 2026-11-17). Rejected:
+    a plain gradient without stars; custom colors for the UI only.
 
 ## Approach
 
@@ -241,6 +254,12 @@ flowchart TD
 - [ ] With the panel closed and no orientation the sky repaints at most twice a
       minute, never while `document.visibilityState` is `hidden`, and at
       device-pixel ratio 1.
+- [ ] With `azimuth` set, `<cosmos-sky>` faces that direction at the given
+      `altitude` and `fov`, shows the compass labels, wins over the phone
+      orientation, and repaints on a change without rebuilding its stylesheet.
+- [ ] With `sky-top` and `sky-bottom` set, the gradient and `--cosmos-sky-*`
+      take those colors, the text keeps 4.5:1 against the top, stars and
+      stage follow the sun, and a malformed color falls back to the palette.
 - [ ] Inside an iframe the element runs in `colors` mode and creates no canvas.
 - [ ] A page whose `body` keeps an opaque background shows no stars and the
       element carries `data-covered`; after the page clears it and calls
@@ -289,7 +308,8 @@ flowchart TD
   - [ ] Sun, moon, stars and globe against reference values.
   - [ ] Contrast over a day.
   - [ ] Timezone table, aliases and deployment default.
-  - [ ] Orientation mapping.
+  - [ ] Orientation mapping and view steering by attributes.
+  - [ ] Custom sky colors and their fallback.
   - [ ] Hotkey matcher, attribute parsing, settings cookie codec.
 - **Integration**
   - [ ] Core's `make roles-pull` places the role and its lints pass.
