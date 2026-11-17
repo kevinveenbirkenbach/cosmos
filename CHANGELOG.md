@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.3.0] - 2026-11-17
+
+Added:
+
+- Sky: *azimuth*, *altitude* and *fov* attributes steer the visible view
+- Sky: *sky-top* and *sky-bottom* attributes set custom sky colors
+
+Upgrade notes:
+
+- Embedders: nothing to change; without the attributes the sky stays as is
+- Release 0.2.2 already shipped both; its entry named only the test fix
+
+Contributors:
+
+- [Kevin Veen-Birkenbach](https://veen.world): steerable view, custom sky
+
 ## [0.2.2] - 2026-11-17
 
 Fixed:
