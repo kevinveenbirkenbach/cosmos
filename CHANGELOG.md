@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.3.1] - 2026-11-19
+
+Fixed:
+
+- Tests: the device-orientation test skips targets served over plain HTTP
+
+Contributors:
+
+- [Kevin Veen-Birkenbach](https://veen.world): onion test compatibility
+
 ## [0.3.0] - 2026-11-17
 
 Added:
