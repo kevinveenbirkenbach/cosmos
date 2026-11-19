@@ -230,6 +230,7 @@ test("screenshots at noon, dusk and night with the panel closed and open", async
 });
 
 test("on a phone whose motion sensors are allowed the sky follows the device orientation", async ({ browser }, testInfo) => {
+  test.skip(!appBaseUrl.startsWith("https://"), "browsers expose motion sensors only to secure contexts; onion vhosts serve plain HTTP");
   const context = await browser.newContext({ ...devices["Pixel 7"], ignoreHTTPSErrors: true, permissions: ["accelerometer", "gyroscope", "magnetometer"] });
   const page = await context.newPage();
   await gotoOnion(page, `${appBaseUrl}/`);
