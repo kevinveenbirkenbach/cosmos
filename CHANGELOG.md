@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.3.2] - 2026-11-20
+
+Fixed:
+
+- Tests: the gated-motion test emulates Safari's whole permission gate
+
+Contributors:
+
+- [Kevin Veen-Birkenbach](https://veen.world): https test compatibility
+
 ## [0.3.1] - 2026-11-19
 
 Fixed:
