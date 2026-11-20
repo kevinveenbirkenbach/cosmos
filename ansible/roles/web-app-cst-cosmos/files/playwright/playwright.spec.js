@@ -255,6 +255,11 @@ test("on a phone that gates motion behind a prompt the sky waits for a tap and a
       window.__motionAsks += 1;
       return ask.apply(DeviceOrientationEvent, args);
     };
+    const query = navigator.permissions.query.bind(navigator.permissions);
+    navigator.permissions.query = (descriptor) =>
+      ["accelerometer", "gyroscope", "magnetometer"].includes(descriptor.name)
+        ? Promise.reject(new TypeError(`Safari knows no ${descriptor.name} permission`))
+        : query(descriptor);
   });
   const page = await context.newPage();
   await gotoOnion(page, `${appBaseUrl}/`);
